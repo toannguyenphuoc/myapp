@@ -2,29 +2,27 @@ name: Deploy Laravel with Docker
 
 on:
   push:
-    branches:
-      - main   # deploy khi push code vào branch main
+    branches: [ "main" ]   # chỉ chạy khi push lên branch main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
+      - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.DOCKER_SSH_KEY }}" > ~/.ssh/id_rsa
+          echo "${{ secrets.SERVER_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.DOCKER_HOST }} >> ~/.ssh/known_hosts
+          ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
 
       - name: Deploy to server
         run: |
-          ssh ${{ secrets.DOCKER_USER }}@${{ secrets.DOCKER_HOST }} "
-            cd /home/deploy/laravel-app &&
-            git pull origin main &&
-            docker-compose pull &&
+          ssh -i ~/.ssh/id_rsa ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "
+            cd ~/myapp && \
+            git pull origin main && \
             docker-compose up -d --build
           "
