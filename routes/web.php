@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\PostController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,3 +18,25 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth'])->name('dashboard');
+
+// Route::middleware(['auth'])->group(function () {
+
+//     Route::get('/dashboard', function () {
+//         return view('dashboard');
+//     })->name('dashboard');
+
+//     // Chỉ admin được vào
+//     Route::middleware(['role:admin'])->group(function () {
+//         Route::resource('users', UserController::class);
+//     });
+
+//     // Editor hoặc Admin có thể manage posts (dựa trên permission)
+//     Route::resource('posts', PostController::class)
+//         ->middleware('permission:posts.view|posts.create|posts.update|posts.delete');
+// });
+
+require __DIR__.'/auth.php';

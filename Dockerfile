@@ -11,6 +11,7 @@ RUN apt-get update && apt-get install -y \
     zip \
     unzip \
     git \
+    nodejs npm \
     curl && \
     docker-php-ext-configure gd --with-freetype --with-jpeg && \
     docker-php-ext-install gd mbstring pdo_mysql xml
