@@ -34,9 +34,10 @@ COPY . .
 # Chạy lại scripts để Laravel thực hiện package discovery
 RUN composer run-script post-autoload-dump
 
-# Tạo thư mục nếu chưa có
+# Tạo thư mục cần ghi + phân quyền cho www-data ngay khi build
 RUN mkdir -p /var/www/storage /var/www/bootstrap/cache \
-    && chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
+    && chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache \
+    && chmod -R 775 /var/www/storage /var/www/bootstrap/cache
 
 # Expose port 9000 cho PHP-FPM
 EXPOSE 9000
