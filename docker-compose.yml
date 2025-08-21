@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
     app:
         build:
@@ -10,6 +12,8 @@ services:
             - .:/var/www
         networks:
             - laravel
+        depends_on:
+            - mysql
 
     nginx:
         image: nginx:alpine
@@ -26,7 +30,7 @@ services:
             - laravel
 
     mysql:
-        image: mysql:8.0
+        image: mariadb:10.6
         container_name: laravel_mysql
         restart: unless-stopped
         environment:
@@ -38,6 +42,10 @@ services:
             - "3366:3306"
         volumes:
             - mysql_data:/var/lib/mysql
+        command: >
+            --innodb-buffer-pool-size=128M
+            --max-allowed-packet=16M
+            --skip-ssl
         networks:
             - laravel
 
